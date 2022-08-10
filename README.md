@@ -13,6 +13,8 @@
 
 * Postgre version
   PostgreSQL 12
+  
+ Clone this repository then:
 
 ## Database creation and initialization
 
