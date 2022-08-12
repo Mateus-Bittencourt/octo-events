@@ -26,4 +26,9 @@ class EventsController < ApplicationController
       number: payload_body['issue']['number'].to_i
     }
   end
+
+  def render_error
+    render json: { errors: @event.errors.full_messages },
+           status: :unprocessable_entity
+  end
 end
