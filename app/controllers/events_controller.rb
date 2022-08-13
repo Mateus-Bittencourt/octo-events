@@ -17,13 +17,13 @@ class EventsController < ApplicationController
 
   def payload
     # puts "this is my payload: #{request.body.read}"
-    payload_body = JSON.parse(request.body.read)
+    # payload_body = JSON.parse(request.body.read)
     {
-      issue: payload_body['issue'],
-      action: payload_body['action'].to_s,
-      sender: payload_body['sender'],
-      repository: payload_body['repository'],
-      number: payload_body['issue']['number'].to_i
+      issue: params['issue'],
+      action: params['action'].to_s,
+      sender: params['sender'],
+      repository: params['repository'],
+      number: params['issue']['number'].to_i
     }
   end
 

@@ -1,38 +1,51 @@
 require 'rails_helper'
-require 'json'
+# require 'json'
 
 RSpec.describe EventsController do
-  # describe 'POST /events' do
-  #   before do
-  #     payload =
-  #       {
-  #         issue: {
-  #           url: 'https://api.github.com/repos/Mateus-Bittencourt/rails-action-cable-chat/issues/22',
-  #           repository_url: 'https://api.github.com/repos/Mateus-Bittencourt/rails-action-cable-chat'
-  #         },
-  #         action: 'opened',
-  #         sender: {
-  #           login: 'Mateus-Bittencourt',
-  #           id: 95_507_217
-  #         },
-  #         repository: {
-  #           id: 522_059_537,
-  #           node_id: 'R_kgDOHx3_EQ'
-  #         },
-  #         number: 24
-  #       }.to_json
-
-  #     post :create, params: { payload:, 'format': 'json' }
-  #   end
-  #   it 'returns http 201 created' do
-  #     # expect(response.status).to eq(201)
-  #     expect(response).to have_http_status(:created)
-  #   end
-  # end
-
-  describe 'GET /issues/:number/events' do
+  describe 'Create a new post in route POST /events' do
     before do
-      payload_body = '
+      @payload =
+        {
+          issue: {
+            url: 'https://api.github.com/repos/Mateus-Bittencourt/rails-action-cable-chat/issues/22',
+            repository_url: 'https://api.github.com/repos/Mateus-Bittencourt/rails-action-cable-chat'
+          },
+          action: 'opened',
+          sender: {
+            login: 'Mateus-Bittencourt',
+            id: 95_507_217
+          },
+          repository: {
+            id: 522_059_537,
+            node_id: 'R_kgDOHx3_EQ'
+          },
+          number: 24
+        }
+      @count = Event.all.size
+      post :create, params: @payload
+    end
+
+    it 'returns http 201 created' do
+      # expect(response.status).to eq(201)
+      expect(response).to have_http_status(:created)
+    end
+
+    it 'event is really created' do
+      expect(Event.all.size).to eq(@count + 1)
+    end
+
+    it 'check if the action is correct' do
+      expect(Event.last["action"]).to eq(@payload[:action])
+    end
+
+    it 'check if the issue is correct' do
+      expect(Event.last["issue"]).to eq(@payload[:issue])
+    end
+  end
+
+  describe 'return a list of events by issue number in route GET /issues/:number/events' do
+    before do
+      @payload_body = '
       {
         "id": 6,
         "issue": {
@@ -178,21 +191,23 @@ RSpec.describe EventsController do
     }
   '
 
-      payload_body = JSON.parse(payload_body)
-      payload = {
-        issue: payload_body['issue'],
-        action: payload_body['action'].to_s,
-        sender: payload_body['sender'],
-        repository: payload_body['repository'],
-        number: payload_body['issue']['number'].to_i
+      @payload_body = JSON.parse(@payload_body)
+      @payload = {
+        issue: @payload_body['issue'],
+        action: @payload_body['action'].to_s,
+        sender: @payload_body['sender'],
+        repository: @payload_body['repository'],
+        number: @payload_body['issue']['number'].to_i
       }
-      event = Event.new(payload)
-      event.save
-      get :events_by_number, params: { number: event.number }
+      @event = Event.new(@payload)
+      @event.save
+      get :events_by_number, params: { number: @event.number }
     end
+
     it 'returns http success' do
       expect(response).to have_http_status(:success)
     end
+
     it 'returns in json format' do
       expect(response.content_type).to eq 'application/json; charset=utf-8'
     end
@@ -201,10 +216,16 @@ RSpec.describe EventsController do
       json_response = JSON.parse(response.body)
       expect(json_response.class).to eq Array
     end
+
     it 'JSON body response contains expected event attributes' do
       json_response = JSON.parse(response.body)
       expect(json_response[0].keys).to match_array(%w[id issue action sender repository number
                                                       created_at updated_at])
+    end
+
+    it 'returns the corret event issue' do
+      json_response = JSON.parse(response.body)
+      expect(json_response[0]['issue']).to eq(@payload_body['issue'])
     end
   end
 end
