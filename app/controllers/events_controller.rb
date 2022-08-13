@@ -16,16 +16,19 @@ class EventsController < ApplicationController
   private
 
   def payload
-    # puts "this is my payload: #{request.body.read}"
-    # payload_body = JSON.parse(request.body.read)
+
     {
       issue: params['issue'],
-      action: params['action'].to_s,
+      action: JSON.parse(request.body.read)['action'],
       sender: params['sender'],
       repository: params['repository'],
       number: params['issue']['number'].to_i
     }
   end
+
+  # def event_params
+  #   params.require(:event).permit(paylaod)
+  # end
 
   def render_error
     render json: { errors: @event.errors.full_messages },
