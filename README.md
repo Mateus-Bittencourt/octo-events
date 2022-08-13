@@ -13,7 +13,7 @@
 
 * Postgre version
   PostgreSQL 12
-  
+
  Clone this repository then:
 
 ## Database creation and initialization
@@ -49,30 +49,24 @@ then in config/environments/development.rb add the following line with the ngrok
  config.hosts << 'path.ngrok.io'
 ```
 
-then you should create a webhook in a github repository by following these links:
+then you should create a webhook in a github repository by following these links(set a issue event in ngrokpath/events):
 
  * Webhooks Overview: https://developer.github.com/webhooks/
  * Creating Webhooks : https://developer.github.com/webhooks/creating/
+
+
 
 --> Now every time that you make an issue event, this issue will automatically registered in the database of this application
 
 
 ## Run application
 ```
-rails s
+rails s -p 3000
 ```
 
 ## Accessing records in the database
 
-All the issues are avaible in path:
-```
-http://localhost:3000/api/v1/issues/
-```
 All events by issue number are avaible in path:
 ```
 http://localhost:3000/api/v1/issues/<number>/events
-```
-You may access a indivual issue by id with path
-```
-http://localhost:3000/api/v1/issues/<id>
 ```
