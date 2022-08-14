@@ -16,7 +16,6 @@ class EventsController < ApplicationController
   private
 
   def payload
-
     {
       issue: params['issue'],
       action: JSON.parse(request.body.read)['action'],
@@ -25,10 +24,6 @@ class EventsController < ApplicationController
       number: params['issue']['number'].to_i
     }
   end
-
-  # def event_params
-  #   params.require(:event).permit(paylaod)
-  # end
 
   def render_error
     render json: { errors: @event.errors.full_messages },

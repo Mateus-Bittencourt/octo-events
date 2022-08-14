@@ -14,14 +14,8 @@
 * Postgre version
   PostgreSQL 12
 
- Clone this repository then:
 
-## Database creation and initialization
 
-run in your terminal:
-```
-rails db:create db:migrate
-```
 
 ## 💻 How to install
 
@@ -44,6 +38,13 @@ bundle install
 ```
 yarn install
 ```
+## Database creation and initialization
+
+run in your terminal:
+```
+rails db:create db:migrate
+```
+
 then in config/environments/development.rb add the following line with the ngrok path:
 ```
  config.hosts << 'path.ngrok.io'
@@ -68,5 +69,5 @@ rails s -p 3000
 
 All events by issue number are avaible in path:
 ```
-http://localhost:3000/api/v1/issues/<number>/events
+http://localhost:3000/issues/<number>/events
 ```
